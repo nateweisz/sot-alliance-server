@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds">
+
+    <springProfile name="prod">
+        <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+            <http>
+                <url>http://localhost:3100/loki/api/v1/push</url>
+            </http>
+            <format>
+                <label>
+                    <pattern>app=fleet-manager,host=${HOSTNAME}</pattern>
+                </label>
+                <message>
+                    <pattern>d{HH:mm:ss.SSS} (%-26.-26thread) (%-20.-20logger{0}) (%-6level) %msg%n%throwable</pattern>
+                </message>
+            </format>
+        </appender>
+
+        <logger name="net.dv8tion.jda" level="INFO"/>
+        <logger name="com.zaxxer.hikari" level="INFO"/>
+        <logger name="org.flywaydb" level="WARN"/>
+        <logger name="io.github.freya022.botcommands" level="DEBUG"/>
+
+        <logger name="org.springframework" level="WARN"/>
+        <logger name="org.hibernate" level="WARN"/>
+
+
+        <root level="INFO">
+            <appender-ref ref="LOKI" />
+        </root>
+    </springProfile>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{HH:mm:ss.SSS} %boldCyan(%-26.-26thread) %boldYellow(%-20.-20logger{0}) %highlight(%-6level) %msg%n%throwable</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <!-- Specific Logger Configurations -->
+    <logger name="net.dv8tion.jda" level="INFO"/>
+    <logger name="com.zaxxer.hikari" level="INFO"/>
+    <logger name="org.flywaydb" level="WARN"/>
+    <logger name="io.github.freya022.botcommands" level="DEBUG"/>
+
+    <!-- Reduce noise from specific packages -->
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.hibernate" level="WARN"/>
+
+    <!-- Root Logger -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>
